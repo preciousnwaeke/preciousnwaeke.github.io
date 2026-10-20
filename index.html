@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nwaeke · Video Editor &amp; Motion Designer</title>
+<meta name="description" content="Nwaeke edits documentaries, podcasts and brand films, and designs the motion graphics that go with them.">
+<meta property="og:title" content="Nwaeke · Video Editor &amp; Motion Designer">
+<meta property="og:description" content="Cut with intention. Selected editing, motion design and colour work.">
+<meta property="og:image" content="https://preciousnwaeke.github.io/media/health.jpg">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23121110'/%3E%3Ctext x='32' y='46' font-family='Georgia,serif' font-size='42' text-anchor='middle' fill='%23E8432E'%3EN%3C/text%3E%3C/svg%3E">
+<style>body{margin:0} img{max-width:100%} [hidden]{display:none!important}</style>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: an editor's page. Dark edit-bay by default, paper in light mode.
+   Selected work reads like a bin of clips: slate, timecode duration, role, tools. */
+:root {
+  --bg: #121110;          /* edit bay */
+  --panel: #1A1917;
+  --line: #2B2825;
+  --fg: #EDE7DC;          /* paper */
+  --muted: #8F887D;
+  --razor: #E8432E;       /* razor / record red */
+  --razor-ink: #121110;
+  --display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --body: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #EFE9DF; --panel: #E7E0D3; --line: #D3CABA; --fg: #161514; --muted: #6E675C;
+    --razor: #D2331F; --razor-ink: #FFFFFF; color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #EFE9DF; --panel: #E7E0D3; --line: #D3CABA; --fg: #161514; --muted: #6E675C;
+  --razor: #D2331F; --razor-ink: #FFFFFF; color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--body); font-size: 17px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 10; background: var(--bg);
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--razor); outline-offset: 3px; border-radius: 2px; }
+
+.wrap {
+  max-width: 1200px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+@media (min-width: 720px) { .wrap { padding-left: max(40px, env(safe-area-inset-left, 0px)); padding-right: max(40px, env(safe-area-inset-right, 0px)); } }
+
+.mono { font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase; }
+.muted { color: var(--muted); }
+.tc { font-variant-numeric: tabular-nums; }
+
+/* ── Top bar ─────────────────────────────── */
+header.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.bar .wrap { display: flex; align-items: center; gap: 24px; padding-block: 14px; }
+.name { font-family: var(--display); font-size: 28px; line-height: 1; text-decoration: none; }
+.rec { display: inline-flex; align-items: center; gap: 8px; }
+.rec i { width: 8px; height: 8px; border-radius: 50%; background: var(--razor); display: inline-block; animation: blink 1.6s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0.25; } }
+@media (prefers-reduced-motion: reduce) { .rec i { animation: none; } }
+nav.links { margin-left: auto; display: flex; gap: 22px; }
+nav.links a { text-decoration: none; color: var(--muted); }
+nav.links a:hover { color: var(--fg); }
+@media (max-width: 640px) { nav.links .opt { display: none; } .bar .rec { display: none; } }
+
+/* ── Hero ────────────────────────────────── */
+.hero .wrap { display: grid; grid-template-columns: 1fr; gap: 40px; padding-block: 56px 40px; }
+@media (min-width: 960px) { .hero .wrap { grid-template-columns: 5fr 7fr; align-items: center; gap: 56px; padding-block: 88px 64px; } }
+.hero h1 {
+  font-family: var(--display); font-weight: 400; font-size: clamp(56px, 9vw, 112px);
+  line-height: 0.94; letter-spacing: -0.015em; margin: 18px 0 22px; text-wrap: balance;
+}
+.hero h1 em { color: var(--razor); }
+.hero p.lede { font-size: 19px; max-width: 34ch; margin: 0 0 28px; }
+.ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; padding: 13px 20px; border-radius: 999px;
+  font-weight: 500; font-size: 15px; text-decoration: none; border: 1px solid var(--line); background: transparent; color: var(--fg); cursor: pointer;
+}
+.btn.solid { background: var(--razor); color: var(--razor-ink); border-color: var(--razor); }
+.btn:hover { border-color: var(--fg); }
+.btn.solid:hover { filter: brightness(1.08); border-color: var(--razor); }
+
+.monitor { position: relative; min-width: 0; }
+.frame {
+  position: relative; aspect-ratio: 16 / 9; max-width: 100%; background: #000; overflow: hidden;
+  border: 1px solid var(--line);
+}
+.frame video, .frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.monitor .readout { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; }
+.sound {
+  position: absolute; right: 12px; bottom: 12px; z-index: 2;
+  font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase;
+  background: rgba(10,10,10,0.72); color: #EDE7DC; border: 1px solid rgba(237,231,220,0.25);
+  padding: 8px 12px; border-radius: 999px; cursor: pointer;
+}
+
+/* ── Index (the bin) ─────────────────────── */
+.bin { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.bin .wrap { padding-block: 8px; }
+.bin ol { list-style: none; margin: 0; padding: 0; }
+.bin li a {
+  display: grid; grid-template-columns: 72px 1fr auto; gap: 16px; align-items: baseline;
+  padding: 14px 0; text-decoration: none; border-bottom: 1px solid var(--line);
+}
+.bin li:last-child a { border-bottom: 0; }
+.bin li a:hover .t { color: var(--razor); }
+.bin .t { font-family: var(--display); font-size: 26px; line-height: 1.1; min-width: 0; }
+@media (max-width: 560px) { .bin li a { grid-template-columns: 58px 1fr; } .bin .kind { grid-column: 2; } }
+
+/* ── Work ────────────────────────────────── */
+section.work .wrap { padding-block: 72px 24px; }
+.sec-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 36px; }
+.sec-head h2 { font-family: var(--display); font-weight: 400; font-size: clamp(40px, 6vw, 64px); line-height: 1; margin: 6px 0 0; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 9px 14px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--muted); cursor: pointer;
+}
+.chip[aria-pressed="true"] { color: var(--fg); border-color: var(--fg); }
+
+.project {
+  display: grid; grid-template-columns: 1fr; gap: 28px; padding-block: 40px;
+  border-top: 1px solid var(--line); scroll-margin-top: 80px;
+}
+@media (min-width: 960px) {
+  .project { grid-template-columns: 7fr 5fr; gap: 48px; align-items: start; }
+  .project.flip .media { order: 2; }
+}
+.project .media { min-width: 0; }
+.project .notes { min-width: 0; }
+.project h3 { font-family: var(--display); font-weight: 400; font-size: clamp(36px, 4.4vw, 52px); line-height: 1; margin: 10px 0 16px; text-wrap: balance; }
+.project h3 em { color: var(--razor); }
+.project p { margin: 0 0 22px; max-width: 52ch; }
+dl.meta { display: grid; grid-template-columns: 96px 1fr; gap: 10px 16px; margin: 0; padding-top: 18px; border-top: 1px solid var(--line); }
+dl.meta dt { color: var(--muted); }
+dl.meta dd { margin: 0; min-width: 0; }
+.tag { display: inline-block; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--razor); }
+
+/* slate for pieces whose video is still to be added */
+.slate { aspect-ratio: 16 / 9; max-width: 100%; background: var(--panel); border: 1px solid var(--line); display: grid; grid-template-rows: auto 1fr; overflow: hidden; }
+.slate .sticks {
+  height: 34px;
+  background: repeating-linear-gradient(-45deg, var(--fg) 0 22px, var(--bg) 22px 44px);
+  opacity: 0.9;
+}
+.slate .body { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr auto; }
+.slate .cell { padding: 14px 18px; border-right: 1px solid var(--line); border-top: 1px solid var(--line); min-width: 0; }
+.slate .cell:nth-child(2n) { border-right: 0; }
+.slate .big { grid-column: 1 / -1; border-right: 0; display: flex; flex-direction: column; justify-content: center; }
+.slate .big b { font-family: var(--display); font-weight: 400; font-size: clamp(30px, 4vw, 46px); line-height: 1; }
+
+/* ── Process ─────────────────────────────── */
+section.process .wrap { padding-block: 72px; }
+.process-title { font-family: var(--display); font-weight: 400; font-size: clamp(40px, 6vw, 64px); line-height: 1; margin: 6px 0 0; }
+.steps { display: grid; grid-template-columns: 1fr; gap: 0; margin-top: 36px; border-top: 1px solid var(--line); }
+@media (min-width: 820px) { .steps { grid-template-columns: repeat(4, 1fr); } }
+.step { padding: 22px 22px 26px 0; border-bottom: 1px solid var(--line); min-width: 0; }
+@media (min-width: 820px) { .step { border-bottom: 0; border-right: 1px solid var(--line); padding: 22px 22px 26px; } .step:first-child { padding-left: 0; } .step:last-child { border-right: 0; } }
+.step h4 { font-family: var(--display); font-weight: 400; font-size: 30px; margin: 10px 0 8px; line-height: 1.05; }
+.step p { margin: 0; color: var(--muted); font-size: 15.5px; }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 36px; }
+.tools span { font-family: var(--mono); font-size: 12px; letter-spacing: 0.05em; padding: 8px 12px; border: 1px solid var(--line); border-radius: 6px; }
+
+/* ── Contact ─────────────────────────────── */
+section.contact { border-top: 1px solid var(--line); }
+section.contact .wrap { padding-block: 80px 64px; display: grid; gap: 32px; }
+@media (min-width: 900px) { section.contact .wrap { grid-template-columns: 7fr 5fr; align-items: end; } }
+.contact h2 { font-family: var(--display); font-weight: 400; font-size: clamp(48px, 8vw, 96px); line-height: 0.95; margin: 12px 0 0; text-wrap: balance; }
+.contact h2 em { color: var(--razor); }
+.reach { display: grid; gap: 12px; }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 10px; min-width: 0; }
+.row .v { font-size: 18px; font-weight: 500; overflow-wrap: anywhere; }
+.copy { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; background: transparent; border: 1px solid var(--line); color: var(--fg); padding: 8px 12px; border-radius: 999px; cursor: pointer; white-space: nowrap; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-block: 24px 40px; border-top: 1px solid var(--line); }
+</style>
+</head>
+<body>
+
+
+<header class="bar">
+  <div class="wrap">
+    <a class="name" href="#top">Nwaeke</a>
+    <span class="rec mono muted"><i></i>Available for projects</span>
+    <nav class="links mono" aria-label="Sections">
+      <a href="#work">Work</a>
+      <a class="opt" href="#process">Process</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <div class="mono muted">Video editor &amp; motion designer</div>
+        <h1>Cut with <em>intention.</em></h1>
+        <p class="lede">I edit documentaries, podcasts and brand films, and design the motion graphics that go with them.</p>
+        <div class="ctas">
+          <a class="btn solid" href="#work">Watch the work</a>
+          <a class="btn" href="#contact">Start a project</a>
+        </div>
+      </div>
+      <div class="monitor">
+        <div class="frame">
+          <video id="heroVideo" src="media/cut-with-intention.mp4" poster="media/cut-with-intention.jpg" autoplay muted loop playsinline preload="auto"></video>
+          <button class="sound" id="heroSound" type="button" aria-pressed="false">Sound off</button>
+        </div>
+        <div class="readout mono muted">
+          <span>Cut With Intention · kinetic type</span>
+          <span class="tc" id="heroTc">00:00:00:00</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="bin" aria-label="Selected work index">
+    <div class="wrap">
+      <ol>
+        <li><a href="#health"><span class="mono muted tc">00:52</span><span class="t">A Healthier Edo</span><span class="mono muted kind">Documentary teaser</span></a></li>
+        <li><a href="#riptu"><span class="mono muted tc">00:30</span><span class="t">Riptu</span><span class="mono muted kind">SaaS explainer</span></a></li>
+        <li><a href="#cut"><span class="mono muted tc">00:28</span><span class="t">Cut With Intention</span><span class="mono muted kind">Kinetic typography</span></a></li>
+        <li><a href="#colour"><span class="mono muted tc">00:22</span><span class="t">Colour, before &amp; after</span><span class="mono muted kind">Grading demo</span></a></li>
+        <li><a href="#bytebi"><span class="mono muted tc">00:45</span><span class="t">Bytebi</span><span class="mono muted kind">Product promo</span></a></li>
+        <li><a href="#podcast"><span class="mono muted tc">01:33</span><span class="t">Hard Talk</span><span class="mono muted kind">Interview short</span></a></li>
+      </ol>
+    </div>
+  </div>
+
+  <section class="work" id="work">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <div class="mono muted">Selected work · 2026</div>
+          <h2>The bin</h2>
+        </div>
+        <div class="filters" role="group" aria-label="Filter projects">
+          <button class="chip" type="button" data-filter="all" aria-pressed="true">All</button>
+          <button class="chip" type="button" data-filter="doc" aria-pressed="false">Documentary</button>
+          <button class="chip" type="button" data-filter="motion" aria-pressed="false">Motion graphics</button>
+          <button class="chip" type="button" data-filter="edit" aria-pressed="false">Editing</button>
+          <button class="chip" type="button" data-filter="colour" aria-pressed="false">Colour</button>
+        </div>
+      </div>
+
+      <article class="project" id="health" data-cat="doc">
+        <div class="media">
+          <div class="frame">
+            <video src="media/health.mp4" poster="media/health.jpg" controls playsinline preload="none"></video>
+          </div>
+        </div>
+        <div class="notes">
+          <span class="tag">Client · Edo State Ministry of Health</span>
+          <h3>A Healthier <em>Edo</em></h3>
+          <p>A teaser for a documentary on healthcare in Edo State under Governor Monday Okpebholo and the Commissioner for Health, Dr. Cyril Adams Oshiomhole. It opens on the Commissioner, moves through mothers, children and immunisation in the community, and lands on the three pillars of the programme: access, preparedness and protection of lives.</p>
+          <dl class="meta">
+            <dt class="mono">Role</dt><dd>Edit, motion graphics</dd>
+            <dt class="mono">Length</dt><dd class="tc">0:52 · 16:9</dd>
+            <dt class="mono">With</dt><dd>Zimayac Media</dd>
+            <dt class="mono">Tools</dt><dd>Premiere Pro</dd>
+          </dl>
+        </div>
+      </article>
+
+      <article class="project flip" id="riptu" data-cat="motion">
+        <div class="media">
+          <div class="frame">
+            <video src="media/riptu.mp4" poster="media/riptu.jpg" controls playsinline preload="none"></video>
+          </div>
+        </div>
+        <div class="notes">
+          <span class="tag">Concept brand</span>
+          <h3>Riptu, a fintech <em>explainer</em></h3>
+          <p>A 30-second launch film for a Gen Z money app. The ρ logo is pressed like a button, the dashboard tilts into view, and each feature is shown in the product's own interface. Every sound effect was designed from scratch and placed on its frame.</p>
+          <dl class="meta">
+            <dt class="mono">Role</dt><dd>Concept, UI design, motion design, sound design</dd>
+            <dt class="mono">Length</dt><dd class="tc">0:30 · 16:9 and 9:16</dd>
+            <dt class="mono">Tools</dt><dd>Remotion, React</dd>
+          </dl>
+        </div>
+      </article>
+
+      <article class="project" id="cut" data-cat="motion">
+        <div class="media">
+          <div class="frame">
+            <video src="media/cut-with-intention.mp4" poster="media/cut-with-intention.jpg" controls playsinline preload="none"></video>
+          </div>
+        </div>
+        <div class="notes">
+          <span class="tag">Personal piece</span>
+          <h3>Cut With <em>Intention</em></h3>
+          <p>A short piece about what editing is, set as kinetic type. Each word lands on the voiceover to the frame. The edit suite is the design: running timecode, a playhead, razor cuts through the words, and the narrator's own waveform on the timeline.</p>
+          <dl class="meta">
+            <dt class="mono">Role</dt><dd>Script, voice direction, typography, animation, sound</dd>
+            <dt class="mono">Length</dt><dd class="tc">0:28 · 16:9 and 9:16</dd>
+            <dt class="mono">Tools</dt><dd>Remotion, ElevenLabs</dd>
+          </dl>
+        </div>
+      </article>
+
+      <article class="project flip" id="colour" data-cat="colour">
+        <div class="media">
+          <div class="frame">
+            <video src="media/colour-grade.mp4" poster="media/colour-grade.jpg" controls muted playsinline preload="none"></video>
+          </div>
+        </div>
+        <div class="notes">
+          <span class="tag">Demo · Stock log footage</span>
+          <h3>Colour, <em>before</em> &amp; after</h3>
+          <p>A grading demo on free log footage from Pixabay. Each shot opens flat and ungraded, then a wipe reveals the finished look. Each look is saved as a reusable LUT.</p>
+          <dl class="meta">
+            <dt class="mono">Looks</dt><dd>Steel: deep blacks and teal-steel shadows. Blue hour: cool glass and a clean sky. Alpine morning: warm light and crisp snow.</dd>
+            <dt class="mono">Length</dt><dd class="tc">0:22 · 16:9 · silent</dd>
+            <dt class="mono">Tools</dt><dd>3D LUTs (.cube)</dd>
+          </dl>
+        </div>
+      </article>
+
+      <article class="project" id="bytebi" data-cat="motion">
+        <div class="media">
+          <div class="frame">
+            <video src="media/bytebi.mp4" poster="media/bytebi.jpg" controls playsinline preload="none"></video>
+          </div>
+        </div>
+        <div class="notes">
+          <span class="tag">Client · Crypto wallet</span>
+          <h3>Bytebi <em>promo</em></h3>
+          <p>A 45-second promo for a crypto wallet built for everyday users. Circuit lines resolve into the logo, then the app makes its case in its own interface: no seed phrase, Face ID sign-in, and one balance across every chain. Depth of field and slow camera moves keep it premium, carried by a voiceover I produced for the piece.</p>
+          <dl class="meta">
+            <dt class="mono">Role</dt><dd>Motion design, edit, voiceover</dd>
+            <dt class="mono">Length</dt><dd class="tc">0:45 · 16:9</dd>
+            <dt class="mono">Tools</dt><dd>Remotion</dd>
+          </dl>
+        </div>
+      </article>
+
+      <article class="project flip" id="podcast" data-cat="edit">
+        <div class="media">
+          <div class="frame">
+            <video src="media/hardtalk.mp4" poster="media/hardtalk.jpg" controls playsinline preload="none"></video>
+          </div>
+        </div>
+        <div class="notes">
+          <span class="tag">Client · Zimayac Media</span>
+          <h3>Hard Talk: <em>The Governor's Scorecard</em></h3>
+          <p>A short cut from a long-form interview with Hon. Etinosa Igiebor. The conversation is split into chapters (cultism, infrastructure, kidnapping, education, and what's next), with animated callouts that put the numbers on screen as he speaks.</p>
+          <dl class="meta">
+            <dt class="mono">Role</dt><dd>Multicam edit, short-form cut, motion graphics</dd>
+            <dt class="mono">Length</dt><dd class="tc">1:33 · 16:9</dd>
+            <dt class="mono">Tools</dt><dd>Premiere Pro</dd>
+          </dl>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="process" id="process">
+    <div class="wrap">
+      <div class="mono muted">How a project runs</div>
+      <h2 class="process-title">From footage to final</h2>
+      <div class="steps">
+        <div class="step"><span class="mono muted">Step 1</span><h4>Brief &amp; selects</h4><p>We agree the story and the audience. I log the footage and pull the moments worth keeping.</p></div>
+        <div class="step"><span class="mono muted">Step 2</span><h4>Rough cut</h4><p>The story in order, at the right length. You review structure before any polish.</p></div>
+        <div class="step"><span class="mono muted">Step 3</span><h4>Picture lock</h4><p>Pacing, graphics and motion are finished and timed to the frame.</p></div>
+        <div class="step"><span class="mono muted">Step 4</span><h4>Sound &amp; delivery</h4><p>Mix, colour and loudness set for each platform, then exported in every format you need.</p></div>
+      </div>
+      <div class="tools" aria-label="Tools">
+        <span>Premiere Pro</span><span>DaVinci Resolve</span><span>Remotion</span><span>ElevenLabs</span><span>Canva</span><span>HTML / CSS / JS</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <div>
+        <div class="mono muted">Contact</div>
+        <h2>Have footage? Let's <em>cut it.</em></h2>
+      </div>
+      <div class="reach">
+        <div class="row">
+          <div style="min-width:0"><div class="mono muted">Email</div><div class="v" id="em">preciousnwaeke@gmail.com</div></div>
+          <button class="copy" type="button" data-copy="em">Copy</button>
+        </div>
+        <div class="row">
+          <div style="min-width:0"><div class="mono muted">WhatsApp / Phone</div><div class="v" id="wa">+234 705 817 9736</div></div>
+          <div style="display:flex;gap:8px">
+            <button class="copy" type="button" data-copy="wa">Copy</button>
+            <a class="copy" href="https://wa.me/2347058179736" target="_blank" rel="noopener" style="text-decoration:none">WhatsApp</a>
+          </div>
+        </div>
+        <div class="row">
+          <div><div class="mono muted">Instagram</div><div class="v" id="ig">@nwaekstoryteller</div></div>
+          <div style="display:flex;gap:8px">
+            <button class="copy" type="button" data-copy="ig">Copy</button>
+            <a class="copy" href="https://www.instagram.com/nwaekstoryteller/" target="_blank" rel="noopener" style="text-decoration:none">Open</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap mono muted">
+    <span>© 2026 Nwaeke</span>
+    <span>Cut with intention.</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const v = document.getElementById('heroVideo');
+  const btn = document.getElementById('heroSound');
+  const tc = document.getElementById('heroTc');
+  const pad = n => String(n).padStart(2, '0');
+  const tick = () => {
+    const t = v.currentTime || 0;
+    tc.textContent = `${pad(Math.floor(t / 3600))}:${pad(Math.floor(t / 60) % 60)}:${pad(Math.floor(t) % 60)}:${pad(Math.floor((t % 1) * 30))}`;
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+  btn.addEventListener('click', () => {
+    v.muted = !v.muted;
+    if (!v.muted) { v.currentTime = 0; v.play().catch(() => {}); }
+    btn.textContent = v.muted ? 'Sound off' : 'Sound on';
+    btn.setAttribute('aria-pressed', String(!v.muted));
+  });
+
+  // pause the hero while a project video plays
+  document.querySelectorAll('.project video').forEach(pv => {
+    pv.addEventListener('play', () => {
+      v.pause();
+      document.querySelectorAll('.project video').forEach(o => { if (o !== pv) o.pause(); });
+    });
+  });
+
+  // filters
+  const chips = document.querySelectorAll('.chip');
+  chips.forEach(c => c.addEventListener('click', () => {
+    chips.forEach(o => o.setAttribute('aria-pressed', String(o === c)));
+    const f = c.dataset.filter;
+    document.querySelectorAll('.project').forEach(p => { p.hidden = !(f === 'all' || p.dataset.cat === f); });
+  }));
+
+  // copy buttons
+  document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', async () => {
+    const el = document.getElementById(b.dataset.copy);
+    try { await navigator.clipboard.writeText(el.textContent.trim()); b.textContent = 'Copied'; }
+    catch { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Selected'; }
+    setTimeout(() => (b.textContent = 'Copy'), 1600);
+  }));
+})();
+</script>
+
+</body>
+</html>
